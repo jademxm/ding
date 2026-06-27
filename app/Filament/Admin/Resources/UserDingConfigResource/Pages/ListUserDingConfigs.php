@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\UserDingConfigResource\Pages;
+namespace App\Filament\Admin\Resources\UserDingConfigResource\Pages;
 
-use App\Filament\Resources\UserDingConfigResource;
+use App\Filament\Admin\Resources\UserDingConfigResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

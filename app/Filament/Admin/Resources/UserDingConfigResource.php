@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Admin\Resources;
 
-use App\Filament\Resources\UserDingConfigResource\Pages;
+use App\Filament\Admin\Resources\UserDingConfigResource\Pages;
 use App\Models\UserDingConfig;
 use Filament\Forms;
 use Filament\Forms\Form;
