@@ -15,11 +15,14 @@ return new class extends Migration {
             $table->unsignedBigInteger('user_id')->comment('用户ID');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('name')->comment('股票名称');
-            $table->integer('code')->comment('股票代号');
+            $table->string('code')->comment('股票代号');
+            $table->decimal('min',10,2)->comment('监控最小值');
+            $table->decimal('max',10,2)->comment('监控最大值');
             $table->tinyInteger('status')->default(\App\Models\UserStock::STATUS_ENABLE)->comment('状态');
             $table->integer('order')->default(0)->comment('排序');
             $table->timestamps();
             $table->comment('用户股票池');
+            $table->unique(['user_id', 'code']);
         });
     }
 

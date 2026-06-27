@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserStock extends Model
+class UserDingConfig extends Model
 {
     //
     const STATUS_ENABLE = 1; // 启用
@@ -13,14 +13,11 @@ class UserStock extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'code',
+        'webhook',
+        'secret',
         'status',
-        'order',
-        'min',
-        'max'
     ];
 
-    /** 关联用户 */
     public function user()
     {
         return $this->belongsTo(User::class);

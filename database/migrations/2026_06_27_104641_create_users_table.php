@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('用户名');
-            $table->string('phone', 20)->comment('手机号');
+            $table->string('phone', 20)->unique()->comment('手机号');
             $table->tinyInteger('status')->default(User::STATUS_ENABLE)->comment('状态');
             $table->decimal('balance', 10, 2)->default(0.00)->comment('余额');
             $table->timestamps();
