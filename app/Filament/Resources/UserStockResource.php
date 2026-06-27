@@ -77,18 +77,22 @@ class UserStockResource extends Resource
                 Tables\Columns\TextColumn::make('max')->label('监控最大值'),
                 Tables\Columns\IconColumn::make('status')
                     ->label('状态')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                    ->icon(fn ($state) => $state === UserStock::STATUS_ENABLE
+                        ? 'heroicon-o-check-circle'
+                        : 'heroicon-o-x-circle'
+                    )
+                    ->color(fn ($state) => $state === UserStock::STATUS_ENABLE
+                        ? 'success'
+                        : 'danger'
+                    )
+                    ->tooltip(fn ($state) => $state === UserStock::STATUS_ENABLE ? '启用' : '禁用'),
                 Tables\Columns\TextColumn::make('order')->label('排序')->sortable(),
                 Tables\Columns\TextColumn::make('created_at')->label('添加时间')->dateTime(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
-                    ->options([1 => '启用', 0 => '禁用']),
+                    ->options([1 => '启用', 2 => '禁用']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

@@ -66,17 +66,21 @@ class UserDingConfigResource extends Resource
                 Tables\Columns\TextColumn::make('webhook')->label('Webhook')->limit(40),
                 Tables\Columns\IconColumn::make('status')
                     ->label('状态')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                    ->icon(fn ($state) => $state === UserDingConfig::STATUS_ENABLE
+                        ? 'heroicon-o-check-circle'
+                        : 'heroicon-o-x-circle'
+                    )
+                    ->color(fn ($state) => $state === UserDingConfig::STATUS_ENABLE
+                        ? 'success'
+                        : 'danger'
+                    )
+                    ->tooltip(fn ($state) => $state === UserDingConfig::STATUS_ENABLE ? '启用' : '禁用'),
                 Tables\Columns\TextColumn::make('created_at')->label('创建时间')->dateTime(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
-                    ->options([1 => '启用', 0 => '禁用']),
+                    ->options([1 => '启用', 2 => '禁用']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

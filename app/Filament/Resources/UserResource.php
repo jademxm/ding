@@ -35,8 +35,8 @@ class UserResource extends Resource
             Forms\Components\Select::make('status')
                 ->label('状态')
                 ->options([
-                    1 => '启用',
-                    0 => '禁用',
+                    User::STATUS_ENABLE  => '启用',
+                    User::STATUS_DISABLE => '禁用',
                 ])
                 ->default(1)
                 ->required(),
@@ -59,17 +59,21 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('balance')->label('余额')->money('CNY', true),
                 Tables\Columns\IconColumn::make('status')
                     ->label('状态')
-                    ->boolean()
-                    ->trueIcon('heroicon-o-check-circle')
-                    ->falseIcon('heroicon-o-x-circle')
-                    ->trueColor('success')
-                    ->falseColor('danger'),
+                    ->icon(fn ($state) => $state === User::STATUS_ENABLE
+                        ? 'heroicon-o-check-circle'
+                        : 'heroicon-o-x-circle'
+                    )
+                    ->color(fn ($state) => $state === User::STATUS_ENABLE
+                        ? 'success'
+                        : 'danger'
+                    )
+                    ->tooltip(fn ($state) => $state === User::STATUS_ENABLE ? '启用' : '禁用'),
                 Tables\Columns\TextColumn::make('created_at')->label('创建时间')->dateTime()->sortable(),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('status')
                     ->label('状态')
-                    ->options([1 => '启用', 0 => '禁用']),
+                    ->options([1 => '启用', 2 => '禁用']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
