@@ -16,6 +16,13 @@ class DingTalkService
         $this->secret  = config('services.dingtalk.secret');
     }
 
+    /** 运行时切换 webhook/secret */
+    public function setConfig(string $webhook, string $secret): void
+    {
+        $this->webhook = $webhook;
+        $this->secret  = $secret;
+    }
+
     /**
      * 发送文本消息
      */
