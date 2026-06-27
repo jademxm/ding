@@ -26,14 +26,14 @@ class CheckStockAlert extends Command
             );
 
         if (!$isTradeTime) {
-            $this->info('非交易时段，跳过');
+            Log::info('非交易时段，跳过');
             return;
         }
 
         // 1. 获取所有启用用户
         $users = User::where('status', User::STATUS_ENABLE)->get();
         if ($users->isEmpty()) {
-            $this->info('没有启用的用户');
+            Log::info('没有启用的用户');
             return;
         }
 
