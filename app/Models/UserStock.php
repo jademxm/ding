@@ -9,4 +9,18 @@ class UserStock extends Model
     //
     const STATUS_ENABLE = 1; // 启用
     const STATUS_DISABLE = 2;// 禁用
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'code',
+        'status',
+        'order',
+    ];
+
+    /** 关联用户 */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
