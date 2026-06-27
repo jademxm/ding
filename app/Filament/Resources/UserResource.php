@@ -9,6 +9,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -31,6 +32,15 @@ class UserResource extends Resource
                 ->tel()
                 ->required()
                 ->maxLength(20),
+
+            Forms\Components\TextInput::make('password')
+                ->label('登录密码')
+                ->password()
+                ->revealable()
+                ->required(fn (string $operation): bool => $operation === 'create') // 新建必填
+                ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
+                ->dehydrated(fn ($state) => filled($state)) // 编辑时空不提交
+                ->maxLength(255),
 
             Forms\Components\Select::make('status')
                 ->label('状态')
