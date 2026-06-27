@@ -89,7 +89,7 @@ class UserDingConfigResource extends Resource
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
             ])
-            ->defaultSort('created_at', 'desc');
+            ->defaultSort('created_at', 'asc');
     }
 
     public static function getPages(): array
