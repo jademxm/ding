@@ -18,6 +18,18 @@ class CheckStockAlert extends Command
 
     public function handle(): void
     {
+        $now = Carbon::now('Asia/Shanghai');
+        $isTradeTime = $now->isWeekday()
+            && (
+                ($now->between(Carbon::parse('09:30'), Carbon::parse('11:30')))
+                || ($now->between(Carbon::parse('13:00'), Carbon::parse('15:00')))
+            );
+
+        if (!$isTradeTime) {
+            $this->info('非交易时段，跳过');
+            return;
+        }
+
         // 1. 获取所有启用用户
         $users = User::where('status', User::STATUS_ENABLE)->get();
         if ($users->isEmpty()) {
@@ -67,8 +79,19 @@ class CheckStockAlert extends Command
                 $max = $stock->max;
                 $alert = false;
                 $msg = '';
-                $date = Carbon::now()->format('m-d H:i');
 
+                // 同一价位且距上次预警不足 30 分钟 → 跳过
+                if (
+                    $stock->last_alert_price !== null
+                    && abs($stock->last_alert_price - $price) < 0.001
+                    && $stock->last_alert_at
+                    && $stock->last_alert_at->diffInMinutes(now()) < 30
+                ) {
+                    Log::info("{$user->name},{$stock->name},{$price},同一价位且距上次预警不足 30 分钟 → 跳过");
+                    continue;
+                }
+
+                $date = Carbon::now()->format('m-d H:i');
                 if ($price <= $min || $price >= $max) {
                     $alert = true;
                     $msg = <<<TEXT
@@ -87,6 +110,13 @@ TEXT;
                     try {
                         $ding->setConfig($dingConfig->webhook, $dingConfig->secret);
                         $resp = $ding->sendText($msg, [$user->phone]);
+                        if($resp["errcode"] == 0){
+                            // 推送成功后
+                            $stock->update([
+                                'last_alert_at'   => now(),
+                                'last_alert_price'=> $price,
+                            ]);
+                        }
                         Log::info("钉钉预警推送成功", [
                             'user' => $user->id,
                             'stock' => $code,
@@ -104,6 +134,13 @@ TEXT;
                     // 无钉钉配置，推送到默认群
                     try {
                         $resp = $ding->sendText($msg, [$user->phone]);
+                        if($resp["errcode"] == 0){
+                            // 推送成功后
+                            $stock->update([
+                                'last_alert_at'   => now(),
+                                'last_alert_price'=> $price,
+                            ]);
+                        }
                         Log::info("钉钉预警推送成功,无配置", [
                             'user' => $user->id,
                             'stock' => $code,

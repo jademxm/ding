@@ -17,7 +17,9 @@ class UserStock extends Model
         'status',
         'order',
         'min',
-        'max'
+        'max',
+        'last_alert_at',
+        'last_alert_price'
     ];
 
     /** 关联用户 */
