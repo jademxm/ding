@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Models;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 
-use Illuminate\Database\Eloquent\Model;
-
-class User extends Model
+class User extends Authenticatable implements FilamentUser
 {
     //
     const STATUS_ENABLE = 1; // 启用
@@ -13,4 +14,10 @@ class User extends Model
     protected $fillable = ['name', 'phone', 'status', 'balance', 'password'];
 
     protected $hidden   = ['password'];
+
+    public function canAccessPanel(Panel $panel): bool
+    {
+        if ($panel->getId() === 'admin') return false; // users 不能进后台
+        return $this->status == 1;                      // 启用可进 /app
+    }
 }
