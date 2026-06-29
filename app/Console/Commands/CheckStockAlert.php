@@ -104,6 +104,10 @@ TEXT;
                 }
 
                 if (!$alert) {
+                    Log::info("无须通知", [
+                        'user' => $user->name,
+                        'stock' => $code,
+                    ]);
                     continue;
                 }
                 // 6. 推钉钉
