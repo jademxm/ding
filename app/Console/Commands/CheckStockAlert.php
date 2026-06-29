@@ -66,6 +66,7 @@ class CheckStockAlert extends Command
             foreach ($stocks as $stock) {
                 $code = $stock->code;
                 if (!isset($quotes[$code])) {
+                    Log::info("未找到匹配的股票", ['codes' => $codes, 'user_name' => $user->name]);
                     continue;
                 }
 
@@ -152,10 +153,10 @@ TEXT;
                     }
                 }
 
-                $this->info("已推送预警: {$name}({$code}) 价格 {$price}");
+                Log::info("已推送预警: {$name}({$code}) 价格 {$price}");
             }
         }
 
-        $this->info('股票预警检查完成');
+        Log::info('股票预警检查完成');
     }
 }
