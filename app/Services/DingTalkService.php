@@ -71,7 +71,7 @@ class DingTalkService
             . '&sign=' . urlencode($sign);
 
         try {
-            $resp = Http::asJson()->post($url, $body)->json();
+            $resp = Http::asJson()->timeout(5)->post($url, $body)->json();
         } catch (\Throwable $e) {
             Log::error('DingTalk send failed', ['msg' => $e->getMessage()]);
             $resp = ['errcode' => -1, 'errmsg' => $e->getMessage()];
