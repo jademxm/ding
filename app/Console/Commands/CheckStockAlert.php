@@ -86,7 +86,7 @@ class CheckStockAlert extends Command
                     $stock->last_alert_price !== null
                     && abs($stock->last_alert_price - $price) < 0.001
                     && $stock->last_alert_at
-                    && $stock->last_alert_at->diffInMinutes(now()) < 30
+                    && Carbon::parse($stock->last_alert_at)->diffInMinutes(now()) < 30
                 ) {
                     Log::info("{$user->name},{$stock->name},{$price},同一价位且距上次预警不足 30 分钟 → 跳过");
                     continue;
